@@ -6,7 +6,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2023",
+    "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
@@ -16,6 +16,20 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+			"@micro-lib/http": ["libs/http/src"],
+			"@micro-lib/http/*": ["libs/http/src/*"],
+			"@micro-lib/core": ["libs/core/src"],
+			"@micro-lib/core/*": ["libs/core/src/*"],
+			"@micro-lib/logger": ["libs/logger/src"],
+			"@micro-lib/logger/*": ["libs/logger/src/*"],
+			"@micro-lib/common": ["libs/common/src"],
+			"@micro-lib/common/*": ["libs/common/src/*"],
+			"@micro-lib/database": ["libs/database/src"],
+			"@micro-lib/database/*": ["libs/database/src/*"],
+			"@micro-lib/dto": ["libs/dto/src"],
+			"@micro-lib/dto/*": ["libs/dto/src/*"]
+		}
   }
 }

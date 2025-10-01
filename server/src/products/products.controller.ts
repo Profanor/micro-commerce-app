@@ -25,7 +25,12 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @ApiOperation({ summary: 'Get all products with pagination & search' })
-  @ApiResponse({ status: 200, description: 'List of products returned' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of products returned',
+    type: CreateProductDto,
+    isArray: true,
+  })
   @Get()
   findAll(
     @Query('page') page = 1,
@@ -36,14 +41,22 @@ export class ProductsController {
   }
 
   @ApiOperation({ summary: 'Get product by id' })
-  @ApiResponse({ status: 200, description: 'Product found' })
+  @ApiResponse({
+    status: 200,
+    description: 'Product found',
+    type: CreateProductDto,
+  })
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.findOne(id);
   }
 
   @ApiOperation({ summary: 'Create new product (admin only)' })
-  @ApiResponse({ status: 201, description: 'Product created' })
+  @ApiResponse({
+    status: 201,
+    description: 'Product created',
+    type: CreateProductDto,
+  })
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   @Post()

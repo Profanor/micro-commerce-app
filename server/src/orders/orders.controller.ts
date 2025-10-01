@@ -14,7 +14,11 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @ApiOperation({ summary: 'Create a new order (user only)' })
-  @ApiResponse({ status: 201, description: 'Order created successfully' })
+  @ApiResponse({
+    status: 201,
+    description: 'Order created successfully',
+    type: CreateOrderDto,
+  })
   @Post()
   create(@Req() req, @Body() dto: CreateOrderDto) {
     return this.ordersService.create(req.user.userId, dto);

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '@micro-lib/database/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -43,9 +47,22 @@ export class ProductsService {
   }
 
   async update(id: number, dto: UpdateProductDto) {
-    const exists = await this.db.product.findUnique({ where: { id } });
-    if (!exists) throw new NotFoundException(`Product ${id} not found`);
-    return this.db.product.update({ where: { id }, data: dto });
+    return this.db.$transaction(async (tx) => {
+      const product = await tx.product.findUnique({ where: { id } });
+      if (!product) {
+        throw new NotFoundException(`Product ${id} not found`);
+      }
+
+      // optional: validate stock change
+      if (dto.inventory !== undefined && dto.inventory < 0) {
+        throw new BadRequestException('Inventory cannot be negative');
+      }
+
+      return tx.product.update({
+        where: { id },
+        data: dto,
+      });
+    });
   }
 
   async remove(id: number) {

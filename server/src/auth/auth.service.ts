@@ -21,8 +21,11 @@ export class AuthService {
 
   async registerUser(dto: RegisterDto) {
     try {
+      // normalize email
+      const email = dto.email.trim().toLowerCase();
+
       const existingUser = await this.db.user.findUnique({
-        where: { email: dto.email },
+        where: { email },
       });
 
       if (existingUser) {
@@ -52,8 +55,10 @@ export class AuthService {
 
   async login(dto: LoginDto) {
     try {
+      const email = dto.email.trim().toLowerCase();
+
       const user = await this.db.user.findUnique({
-        where: { email: dto.email },
+        where: { email },
       });
 
       if (!user) {

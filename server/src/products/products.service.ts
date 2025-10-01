@@ -67,7 +67,12 @@ export class ProductsService {
 
   async remove(id: number) {
     const exists = await this.db.product.findUnique({ where: { id } });
-    if (!exists) throw new NotFoundException(`Product ${id} not found`);
-    return this.db.product.delete({ where: { id } });
+    if (!exists) {
+      throw new NotFoundException(`Product ${id} not found`);
+    }
+
+    await this.db.product.delete({ where: { id } });
+
+    return { message: `Product ${id} has been successfully deleted.` };
   }
 }

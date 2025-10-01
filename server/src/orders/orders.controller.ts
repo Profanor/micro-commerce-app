@@ -5,9 +5,15 @@ import { JwtAuthGuard } from '../auth/jwt.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { UserRole } from '@prisma/client';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @ApiTags('orders')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('orders')
 export class OrdersController {
@@ -19,6 +25,7 @@ export class OrdersController {
     description: 'Order created successfully',
     type: CreateOrderDto,
   })
+  @Roles(UserRole.USER)
   @Post()
   create(@Req() req, @Body() dto: CreateOrderDto) {
     return this.ordersService.create(req.user.userId, dto);
@@ -26,6 +33,7 @@ export class OrdersController {
 
   @ApiOperation({ summary: 'Get my orders (user only)' })
   @ApiResponse({ status: 200, description: 'List of user orders' })
+  @Roles(UserRole.USER)
   @Get('my')
   findMyOrders(@Req() req) {
     return this.ordersService.findMyOrders(req.user.userId);

@@ -21,7 +21,7 @@
     "seed": "ts-node prisma/seed/seed.ts",
 
     "postinstall": "prisma generate",
-    "render-build": "pnpm build",
+    "render-build": "pnpm dlx nest build",
     "migrate:deploy": "prisma migrate deploy"
   },
   "dependencies": {

@@ -1,5 +1,12 @@
 import { Link } from "react-router-dom";
-import { Package, PlusCircle, ClipboardList, DollarSign } from "lucide-react";
+import {
+  Package,
+  PlusCircle,
+  ClipboardList,
+  HomeIcon,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -17,11 +24,18 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         onClick={onToggle}
         className="mb-6 text-gray-600 hover:text-gray-900"
       >
-        {collapsed ? "👉" : "👈"}
+        {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
       </button>
 
       {/* Nav Links */}
       <nav className="flex flex-col gap-4">
+        <Link
+          to="/"
+          className="flex items-center gap-3 p-2 rounded hover:bg-gray-100"
+        >
+          <HomeIcon size={20} />
+          {!collapsed && <span>Home</span>}
+        </Link>
         <Link
           to="/products"
           className="flex items-center gap-3 p-2 rounded hover:bg-gray-100"
@@ -42,13 +56,6 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         >
           <ClipboardList size={20} />
           {!collapsed && <span>Orders</span>}
-        </Link>
-        <Link
-          to="/revenue"
-          className="flex items-center gap-3 p-2 rounded hover:bg-gray-100"
-        >
-          <DollarSign size={20} />
-          {!collapsed && <span>Revenue</span>}
         </Link>
       </nav>
     </aside>

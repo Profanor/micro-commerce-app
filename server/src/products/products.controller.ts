@@ -23,12 +23,16 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { PrismaService } from '@micro-lib/database/prisma.service';
 
 @ApiTags('products')
 @ApiBearerAuth()
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly db: PrismaService,
+  ) {}
 
   @ApiOperation({ summary: 'Get all products with pagination & search' })
   @ApiResponse({
@@ -44,6 +48,14 @@ export class ProductsController {
     @Query('search') search?: string,
   ) {
     return this.productsService.findAll(+page, +limit, search);
+  }
+
+  @Get('count')
+  @ApiOperation({ summary: 'Get total number of products' })
+  @ApiResponse({ status: 200, description: 'Total products count' })
+  async count() {
+    const count = await this.db.product.count();
+    return { count };
   }
 
   @ApiOperation({ summary: 'Get product by id' })

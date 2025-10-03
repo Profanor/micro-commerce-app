@@ -16,7 +16,7 @@ export class ProductsService {
     const skip = (page - 1) * limit;
 
     // type-safe declaration
-    const where: Prisma.ProductWhereInput = {};
+    const where: Prisma.ProductWhereInput = { deleted: false };
 
     if (search) {
       where.OR = [
@@ -66,13 +66,14 @@ export class ProductsService {
   }
 
   async remove(id: number) {
-    const exists = await this.db.product.findUnique({ where: { id } });
-    if (!exists) {
-      throw new NotFoundException(`Product ${id} not found`);
-    }
+    const product = await this.db.product.findUnique({ where: { id } });
+    if (!product) throw new NotFoundException(`Product ${id} not found`);
 
-    await this.db.product.delete({ where: { id } });
+    await this.db.product.update({
+      where: { id },
+      data: { deleted: true },
+    });
 
-    return { message: `Product ${id} has been successfully deleted.` };
+    return { message: `Product ${id} has been soft-deleted.` };
   }
 }

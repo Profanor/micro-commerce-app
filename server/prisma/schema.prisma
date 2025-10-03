@@ -23,6 +23,7 @@ model Product {
   description String?
   price       Float
   inventory   Int
+  deleted     Boolean     @default(false)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   OrderItem   OrderItem[]

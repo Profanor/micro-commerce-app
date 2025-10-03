@@ -11,13 +11,17 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { PrismaService } from '@micro-lib/database/prisma.service';
 
 @ApiTags('orders')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('orders')
 export class OrdersController {
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(
+    private readonly ordersService: OrdersService,
+    private readonly db: PrismaService,
+  ) {}
 
   @ApiOperation({ summary: 'Create a new order (user only)' })
   @ApiResponse({
@@ -45,5 +49,23 @@ export class OrdersController {
   @Get('all')
   findAll() {
     return this.ordersService.findAll();
+  }
+
+  @Get('count')
+  @ApiOperation({ summary: 'Get total number of orders' })
+  @ApiResponse({ status: 200, description: 'Total orders count' })
+  async count() {
+    const count = await this.db.order.count();
+    return { count };
+  }
+
+  @Get('revenue')
+  @ApiOperation({ summary: 'Get total revenue from all orders' })
+  @ApiResponse({ status: 200, description: 'Total revenue' })
+  async revenue() {
+    const sum = await this.db.order.aggregate({
+      _sum: { total: true },
+    });
+    return { revenue: sum._sum.total ?? 0 };
   }
 }

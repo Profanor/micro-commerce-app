@@ -16,7 +16,7 @@
   "seed": "ts-node prisma/seed/seed.ts",
 
   "postinstall": "prisma generate",
-  "render-build": "pnpm install && pnpm add -g @nestjs/cli && nest build",
+  "render-build": "pnpm install && pnpm exec nest build",
   "migrate:deploy": "prisma migrate deploy"
 },
 

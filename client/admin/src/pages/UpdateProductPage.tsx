@@ -1,8 +1,9 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import axiosClient from "../lib/axiosClient";
 import { useAuth } from "../hooks/useAuth";
+import { ArrowLeft } from "lucide-react";
 
 export default function UpdateProductPage() {
   const { id } = useParams();
@@ -81,6 +82,14 @@ export default function UpdateProductPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
+      {/* back button */}
+      <Link
+        to="/products"
+        className="mb-6 inline-flex items-center gap-2 text-gray-600 transition-colors hover:text-gray-900"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to Products
+      </Link>
       <div className="bg-white rounded-lg shadow-md border border-gray-200 p-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Edit Product</h1>

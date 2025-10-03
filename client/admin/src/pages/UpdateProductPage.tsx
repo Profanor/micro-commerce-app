@@ -1,3 +1,4 @@
+import type React from "react";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosClient from "../lib/axiosClient";
@@ -55,47 +56,114 @@ export default function UpdateProductPage() {
     }
   };
 
-  if (loading) return <p className="p-6">Loading product...</p>;
-  if (user?.role !== "ADMIN") return <p>Unauthorized</p>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
+          <p className="mt-4 text-gray-600">Loading product...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (user?.role !== "ADMIN") {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-12">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+          <p className="text-red-800 font-semibold">
+            Unauthorized – admin only.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white rounded shadow">
-      <h1 className="text-2xl font-bold mb-4">Edit Product</h1>
-      <form onSubmit={handleUpdate} className="space-y-4">
-        <input
-          title="Title"
-          className="w-full border p-2 rounded"
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <textarea
-          title="Description of the product"
-          className="w-full border p-2 rounded"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <input
-          title="Price"
-          className="w-full border p-2 rounded"
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(Number(e.target.value))}
-        />
-        <input
-          title="Inventory"
-          className="w-full border p-2 rounded"
-          type="number"
-          value={inventory}
-          onChange={(e) => setInventory(Number(e.target.value))}
-        />
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
-          Save Changes
-        </button>
-      </form>
+    <div className="max-w-2xl mx-auto px-4 py-8">
+      <div className="bg-white rounded-lg shadow-md border border-gray-200 p-8">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-gray-900">Edit Product</h1>
+          <p className="mt-2 text-gray-600">Update product information</p>
+        </div>
+
+        <form onSubmit={handleUpdate} className="space-y-6">
+          <div>
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Product Title
+            </label>
+            <input
+              id="title"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Description
+            </label>
+            <textarea
+              id="description"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow min-h-[120px]"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label
+                htmlFor="price"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Price ($)
+              </label>
+              <input
+                id="price"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
+                type="number"
+                step="0.01"
+                min="0"
+                value={price}
+                onChange={(e) => setPrice(Number(e.target.value))}
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="inventory"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Inventory
+              </label>
+              <input
+                id="inventory"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
+                type="number"
+                min="0"
+                value={inventory}
+                onChange={(e) => setInventory(Number(e.target.value))}
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 transition-colors"
+          >
+            Save Changes
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

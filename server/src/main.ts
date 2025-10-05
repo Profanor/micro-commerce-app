@@ -65,11 +65,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  const port = process.env.PORT ?? 4000;
+  const port = process.env.PORT ?? 4001;
   await app.listen(port);
 
   console.log(
-    `🚀 micro-commerce is running on: http://localhost:${process.env.PORT ?? 4001}`,
+    `🚀 micro-commerce is running on: http://localhost:${process.env.PORT}`,
   );
   console.log(
     `📘 Swagger Docs available at: http://localhost:${port}/api/docs`,

@@ -7,6 +7,7 @@ export interface Product {
   description: string;
   price: number;
   inventory: number;
+  image?: string;
 }
 
 interface ProductResponse {

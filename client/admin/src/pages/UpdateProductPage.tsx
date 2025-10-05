@@ -14,6 +14,8 @@ export default function UpdateProductPage() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState<number>(0);
   const [inventory, setInventory] = useState<number>(0);
+  const [image, setImage] = useState<string | null>("");
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,6 +27,7 @@ export default function UpdateProductPage() {
         setDescription(p.description);
         setPrice(p.price);
         setInventory(p.inventory);
+        setImage(p.image ?? null); // null if no image
       } catch (err) {
         console.error("Error fetching product", err);
       } finally {
@@ -39,7 +42,13 @@ export default function UpdateProductPage() {
     try {
       await axiosClient.patch(
         `/products/${id}`,
-        { title, description, price, inventory },
+        {
+          title,
+          description,
+          price,
+          inventory,
+          image: image === "" ? null : image, // explicitly clear if empty
+        },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -48,10 +57,10 @@ export default function UpdateProductPage() {
       navigate(`/products/${id}`);
     } catch (err: unknown) {
       if (err instanceof Error) {
-        console.error("Delete failed:", err.message);
+        console.error("Update failed:", err.message);
         alert(err.message);
       } else {
-        console.error("Delete failed:", err);
+        console.error("Update failed:", err);
         alert("An unknown error occurred");
       }
     }
@@ -90,6 +99,7 @@ export default function UpdateProductPage() {
         <ArrowLeft className="h-4 w-4" />
         Back to Products
       </Link>
+
       <div className="bg-white rounded-lg shadow-md border border-gray-200 p-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Edit Product</h1>
@@ -97,6 +107,7 @@ export default function UpdateProductPage() {
         </div>
 
         <form onSubmit={handleUpdate} className="space-y-6">
+          {/* title */}
           <div>
             <label
               htmlFor="title"
@@ -106,13 +117,40 @@ export default function UpdateProductPage() {
             </label>
             <input
               id="title"
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
             />
           </div>
 
+          {/* image URL */}
+          <div>
+            <label
+              htmlFor="image"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Product Image URL
+            </label>
+            <input
+              id="image"
+              type="text"
+              value={image || ""}
+              onChange={(e) => setImage(e.target.value)}
+              placeholder="https://example.com/image.png"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
+            />
+            {/* live preview */}
+            {image && image.trim() !== "" && (
+              <img
+                src={image}
+                alt="Product preview"
+                className="mt-2 h-40 w-auto rounded-md border border-gray-200 object-cover"
+              />
+            )}
+          </div>
+
+          {/* description */}
           <div>
             <label
               htmlFor="description"
@@ -122,12 +160,13 @@ export default function UpdateProductPage() {
             </label>
             <textarea
               id="description"
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow min-h-[120px]"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow min-h-[120px]"
             />
           </div>
 
+          {/* price & inventory */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <label
@@ -138,12 +177,12 @@ export default function UpdateProductPage() {
               </label>
               <input
                 id="price"
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
                 type="number"
                 step="0.01"
                 min="0"
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
               />
             </div>
 
@@ -156,11 +195,11 @@ export default function UpdateProductPage() {
               </label>
               <input
                 id="inventory"
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
                 type="number"
                 min="0"
                 value={inventory}
                 onChange={(e) => setInventory(Number(e.target.value))}
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
               />
             </div>
           </div>

@@ -12,6 +12,7 @@ export default function CreateProductPage() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState<number>(0);
   const [inventory, setInventory] = useState<number>(0);
+  const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -20,7 +21,13 @@ export default function CreateProductPage() {
       setLoading(true);
       await axiosClient.post(
         "/products",
-        { title, description, price, inventory },
+        {
+          title,
+          description,
+          price,
+          inventory,
+          image: image === "" ? null : image, // send null if empty
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -60,6 +67,7 @@ export default function CreateProductPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* title */}
           <div>
             <label
               htmlFor="title"
@@ -69,15 +77,41 @@ export default function CreateProductPage() {
             </label>
             <input
               id="title"
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
               type="text"
               placeholder="Enter product title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
               required
             />
           </div>
 
+          {/* image URL */}
+          <div>
+            <label
+              htmlFor="image"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Product Image URL
+            </label>
+            <input
+              id="image"
+              type="text"
+              placeholder="https://example.com/image.png"
+              value={image || ""}
+              onChange={(e) => setImage(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
+            />
+            {image && image.trim() !== "" && (
+              <img
+                src={image}
+                alt="Product preview"
+                className="mt-2 h-40 w-auto rounded-md border border-gray-200 object-cover"
+              />
+            )}
+          </div>
+
+          {/* description */}
           <div>
             <label
               htmlFor="description"
@@ -87,14 +121,15 @@ export default function CreateProductPage() {
             </label>
             <textarea
               id="description"
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow min-h-[120px]"
               placeholder="Enter product description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow min-h-[120px]"
               required
             />
           </div>
 
+          {/* price & inventory */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <label
@@ -105,13 +140,13 @@ export default function CreateProductPage() {
               </label>
               <input
                 id="price"
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
                 type="number"
                 placeholder="0.00"
                 step="0.01"
                 min="0"
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
                 required
               />
             </div>
@@ -125,12 +160,12 @@ export default function CreateProductPage() {
               </label>
               <input
                 id="inventory"
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
                 type="number"
                 placeholder="0"
                 min="0"
                 value={inventory}
                 onChange={(e) => setInventory(Number(e.target.value))}
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
                 required
               />
             </div>

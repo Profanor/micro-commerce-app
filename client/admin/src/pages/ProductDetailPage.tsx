@@ -10,6 +10,7 @@ interface Product {
   description: string;
   price: number;
   inventory: number;
+  image?: string;
 }
 
 export default function ProductDetailPage() {
@@ -101,6 +102,17 @@ export default function ProductDetailPage() {
 
       {/* product card */}
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        {/* image */}
+        {product.image && (
+          <div className="h-64 w-full bg-gray-100 flex items-center justify-center overflow-hidden">
+            <img
+              src={product.image}
+              alt={product.title}
+              className="h-full w-full object-contain transition-transform duration-200 hover:scale-105"
+            />
+          </div>
+        )}
+
         <div className="p-8">
           {/* header */}
           <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">

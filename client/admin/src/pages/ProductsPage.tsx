@@ -30,8 +30,19 @@ export default function ProductsPage() {
             <Link
               key={p.id}
               to={`/products/${p.id}`}
-              className="group block bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200"
+              className="group block bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
             >
+              {/* image container */}
+              {p.image && (
+                <div className="h-48 w-full bg-gray-100 flex items-center justify-center overflow-hidden">
+                  <img
+                    src={p.image}
+                    alt={p.title}
+                    className="h-full w-full object-contain transition-transform duration-200 group-hover:scale-105"
+                  />
+                </div>
+              )}
+
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
                   {p.title}

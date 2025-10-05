@@ -14,7 +14,7 @@ The project includes:
 |----------|-----|-------------|
 | **Backend (API)** | [https://micro-commerce-app.onrender.com](https://micro-commerce-app.onrender.com) | Hosted on Render |
 | **Swagger Docs** | [https://micro-commerce-app.onrender.com/api/docs](https://micro-commerce-app.onrender.com/api/docs) | API documentation |
-| **Admin Dashboard** | [https://kenkeputa-admin.vercel.app](https://kenkeputa-admin.vercel.app) | Vite + React admin interface |
+| **Admin Dashboard** | [https://micro-commerce-app-nine.vercel.app](https://micro-commerce-app-nine.vercel.app) | Vite + React admin interface |
 | **Database** | PostgreSQL (Render) | Used by both backend and admin |
 | **Mobile App** | Run locally with Expo | Customer shopping app |
 
@@ -25,7 +25,7 @@ The project includes:
 | Layer | Technology |
 |--------|-------------|
 | **Backend** | NestJS, Prisma ORM, PostgreSQL |
-| **Frontend (Admin)** | React + Vite |
+| **Frontend (Admin)** | React + Vite +  Tailwind|
 | **Mobile App** | React Native (Expo) |
 | **Deployment** | Render (Backend + DB), Vercel (Admin) |
 | **Authentication** | JWT-based |
@@ -65,10 +65,10 @@ pnpm start:dev
 
 - .env Example:
 
-DATABASE_URL="postgresql://<user>:<password>@<host>/<db_name>?schema=public"
-PORT=4001
-JWT_SECRET=dregon101.
-JWT_EXPIRY=3600s
+- DATABASE_URL="postgresql://<user>:<password>@<host>/<db_name>?schema=public"
+- PORT=4001
+- JWT_SECRET=dregon101.
+- JWT_EXPIRY=3600s
 
 ### 💻 Admin (Web App)
 ```bash
@@ -92,10 +92,10 @@ baseURL: "https://micro-commerce-app.onrender.com/api/v1"
 
 
 ### 🔐 Demo Credentials
-Role	Email	               Password
-Admin	admin@shop.com         admin123
-	
-User	user@shop.com          user123
+| Role      | Email          | Password
+|-----------|----------------|--------------------|
+| **User**  | user@shop.com  | user123
+| **Admin** | admin@shop.com | admin123
 	
 
 📦 Features

@@ -3,6 +3,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUrl,
   Min,
 } from 'class-validator';
 
@@ -22,4 +23,9 @@ export class CreateProductDto {
   @IsNumber()
   @Min(0)
   inventory: number;
+
+  @IsString()
+  @IsOptional()
+  @IsUrl()
+  image?: string;
 }

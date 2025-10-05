@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:15
+    container_name: micro_commerce_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: micro_commerce
+    ports:
+      - "5433:5432" # changed to avoid local Postgres conflict
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  api:
+    build: ./server
+    container_name: micro_commerce_api
+    restart: always
+    ports:
+      - "4001:4001"
+    env_file:
+      - ./server/.env
+    depends_on:
+      - db
+    command: >
+      sh -c "
+      pnpm prisma migrate deploy &&
+      pnpm prisma db seed &&
+      node dist/main.js
+      "
+    # optional: log driver
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  pg_data:

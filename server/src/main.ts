@@ -3,10 +3,38 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { WinstonModule } from 'nest-winston';
+import * as winston from 'winston';
 
 async function bootstrap() {
+  const logger = WinstonModule.createLogger({
+    transports: [
+      new winston.transports.Console({
+        format: winston.format.combine(
+          winston.format.timestamp(),
+          winston.format.colorize(),
+          winston.format.printf((info) => {
+            const { level, message, timestamp } = info as {
+              level: string;
+              message: string;
+              timestamp: string;
+            };
+            return `[${timestamp}] ${level}: ${message}`;
+          }),
+        ),
+      }),
+      new winston.transports.File({
+        filename: 'logs/app.log',
+        format: winston.format.combine(
+          winston.format.timestamp(),
+          winston.format.json(),
+        ),
+      }),
+    ],
+  });
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: ['log', 'fatal', 'error', 'warn', 'debug', 'verbose'],
+    logger,
   });
 
   app.enableCors({
@@ -28,9 +56,11 @@ async function bootstrap() {
     type: VersioningType.URI,
     defaultVersion: '1',
   });
+
   app.setGlobalPrefix('api');
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
   const config = new DocumentBuilder()
     .setTitle('Micro-Commerce-App API')
     .setDescription(
@@ -46,11 +76,9 @@ async function bootstrap() {
   const port = process.env.PORT ?? 4001;
   await app.listen(port);
 
-  console.log(
+  logger.log(
     `🚀 micro-commerce is running on: http://localhost:${process.env.PORT}`,
   );
-  console.log(
-    `📘 Swagger Docs available at: http://localhost:${port}/api/docs`,
-  );
+  logger.log(`📘 Swagger Docs available at: http://localhost:${port}/api/docs`);
 }
 void bootstrap();

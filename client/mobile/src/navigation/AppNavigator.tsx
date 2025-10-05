@@ -8,6 +8,7 @@ import CartScreen from "../screens/CartScreen";
 import OrdersScreen from "../screens/OrdersScreen";
 import CartIcon from "../components/CartIcon";
 import { AuthContext } from "../context/AuthContext";
+import OrderSummaryScreen from "../screens/OrderSummaryScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +48,11 @@ function AppStack() {
             name="Orders"
             component={OrdersScreen}
             options={{ title: "Orders" }}
+          />
+          <Stack.Screen
+            name="OrderSummary"
+            component={OrderSummaryScreen}
+            options={{ title: "Order Summary" }}
           />
         </>
       )}

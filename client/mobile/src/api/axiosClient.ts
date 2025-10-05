@@ -23,9 +23,6 @@ axiosClient.interceptors.request.use(async (config) => {
     if (cachedToken) {
       config.headers.Authorization = `Bearer ${cachedToken}`;
     }
-
-    console.log("Token in request:", cachedToken);
-    console.log("Request headers:", config.headers);
   } catch (err) {
     console.error("Error fetching token:", err);
   }

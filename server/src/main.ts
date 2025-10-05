@@ -9,43 +9,21 @@ async function bootstrap() {
     logger: ['log', 'fatal', 'error', 'warn', 'debug', 'verbose'],
   });
 
-  const allowedOrigins = [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'http://localhost:8081', // Expo / Metro bundler
-    'https://micro-commerce-app-nine.vercel.app',
-    'https://micro-commerce-app.onrender.com',
-  ];
-
   app.enableCors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (e.g. mobile apps or curl)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.warn(`⚠️ CORS blocked request from: ${origin}`);
-        // In dev, allow unknown origins for convenience
-        if (process.env.NODE_ENV !== 'production') {
-          callback(null, true);
-        } else {
-          callback(new Error('Not allowed by CORS'));
-        }
-      }
-    },
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'Origin',
-      'X-Requested-With',
-      'Accept',
+    origin: [
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'http://localhost:8081', // Expo / Metro bundler
+      'https://micro-commerce-app-nine.vercel.app', // Admin (Vercel)
+      'https://micro-commerce-app.onrender.com', // Backend (Render)
     ],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
     preflightContinue: false,
     optionsSuccessStatus: 204,
   });
+
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: '1',

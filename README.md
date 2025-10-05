@@ -54,7 +54,7 @@ micro-commerce-app/
 
 ---
 
-### See .env.example for all required keys.
+## Note: See .env.example for all required keys.
 
 ## 🚀 Quick Start
 
@@ -82,8 +82,8 @@ npx expo start
 ```
 
 
-### 🌱 Seed instructions
-## 🌱 Database Seeding
+## 🌱 Seed instructions
+### 🌱 Database Seeding
 
 - To populate your local or hosted PostgreSQL database with sample users, admin and products:
 
@@ -96,8 +96,10 @@ pnpm run seed
 ### 🔐 Demo Credentials
 | Role      | Email          | Password
 |-----------|----------------|--------------------|
-| **User**  | user@shop.com  | password123
-| **Admin** | admin@shop.com | password123
+| **User**  | user@shop.com  | user123
+| **Admin** | admin@shop.com | admin123
+
+- These are seeded demo accounts for testing authentication and admin access. Passwords are public for demo purposes only.
 
 
 ## 📡 API Endpoints Overview
@@ -141,6 +143,8 @@ Response:
 
 
 ### Order Routes
+| Method | Endpoint | Description |
+|--------|-----------|-------------|
 | POST | `/api/v1/orders` | Create a new order |
 | GET | `/api/v1/orders/my` | Fetch user’s orders |
 | GET | `/api/v1/orders/all` | Admin – fetch all orders |
@@ -150,7 +154,9 @@ Response:
 Swagger docs available at:
 🔗 https://micro-commerce-app.onrender.com/api/docs
 
-📦 Features
+----
+
+📦 **Features**
 
 ✅ JWT Authentication
 ✅ Product CRUD (Admin)

@@ -49,8 +49,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         password,
       });
 
-      console.log("Login response:", res.data);
-
       const { accessToken, user: apiUser } = res.data;
 
       // save token securely

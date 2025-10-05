@@ -53,9 +53,8 @@ export class ProductsController {
   @Get('count')
   @ApiOperation({ summary: 'Get total number of products' })
   @ApiResponse({ status: 200, description: 'Total products count' })
-  async count() {
-    const count = await this.db.product.count();
-    return { count };
+  count() {
+    return this.productsService.count();
   }
 
   @ApiOperation({ summary: 'Get product by id' })

@@ -54,18 +54,14 @@ export class OrdersController {
   @Get('count')
   @ApiOperation({ summary: 'Get total number of orders' })
   @ApiResponse({ status: 200, description: 'Total orders count' })
-  async count() {
-    const count = await this.db.order.count();
-    return { count };
+  count() {
+    return this.ordersService.count();
   }
 
   @Get('revenue')
   @ApiOperation({ summary: 'Get total revenue from all orders' })
   @ApiResponse({ status: 200, description: 'Total revenue' })
-  async revenue() {
-    const sum = await this.db.order.aggregate({
-      _sum: { total: true },
-    });
-    return { revenue: sum._sum.total ?? 0 };
+  revenue() {
+    return this.ordersService.revenue();
   }
 }

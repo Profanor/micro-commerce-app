@@ -80,4 +80,20 @@ export class OrdersService {
       },
     });
   }
+
+  async count() {
+    try {
+      const count = await this.db.order.count();
+      return { count };
+    } catch (error) {
+      throw new BadRequestException('Could not retrieve order count', error);
+    }
+  }
+
+  async revenue() {
+    const sum = await this.db.order.aggregate({
+      _sum: { total: true },
+    });
+    return { revenue: sum._sum.total ?? 0 };
+  }
 }

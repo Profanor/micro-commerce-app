@@ -76,4 +76,13 @@ export class ProductsService {
 
     return { message: `Product ${id} has been soft-deleted.` };
   }
+
+  async count() {
+    try {
+      const count = await this.db.product.count({ where: { deleted: false } });
+      return { count };
+    } catch (error) {
+      throw new BadRequestException('Could not retrieve product count', error);
+    }
+  }
 }

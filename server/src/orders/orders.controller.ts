@@ -52,15 +52,17 @@ export class OrdersController {
   }
 
   @Get('count')
-  @ApiOperation({ summary: 'Get total number of orders' })
+  @ApiOperation({ summary: 'Get total number of orders (admin only)' })
   @ApiResponse({ status: 200, description: 'Total orders count' })
+  @Roles(UserRole.ADMIN)
   count() {
     return this.ordersService.count();
   }
 
   @Get('revenue')
-  @ApiOperation({ summary: 'Get total revenue from all orders' })
+  @ApiOperation({ summary: 'Get total revenue from all orders (admin only)' })
   @ApiResponse({ status: 200, description: 'Total revenue' })
+  @Roles(UserRole.ADMIN)
   revenue() {
     return this.ordersService.revenue();
   }

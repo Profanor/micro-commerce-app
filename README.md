@@ -154,19 +154,44 @@ Response:
 Swagger docs available at:
 🔗 https://micro-commerce-app.onrender.com/api/docs
 
+
+**Testing**
+🧰 End-to-End (E2E) Tests
+
+- All backend tests are written using Jest and Supertest, covering authentication, product CRUD, and key validation flows.
+- These tests ensure that the API endpoints, database interactions, and middleware (like guards and validation pipes) work together as expected.
+- The test configuration is defined in test/jest-e2e.json, and tests are located inside the server/test directory.
+
+
+🧱 Run End-to-End (E2E) Tests
+```bash
+cd server
+pnpm run test:e2e
+```
+
+✅ Coverage
+
+- User registration and login (validations + JWT)
+
+- Product creation, retrieval, update, and deletion
+
+- Proper error handling for invalid or unauthorized actions
+
+- Database seed verification through API responses
+
 ----
 
 📦 **Features**
 
-✅ JWT Authentication
-✅ Product CRUD (Admin)
-✅ Order Placement & Revenue Analytics
-✅ Cart Management (Mobile)
-✅ PostgreSQL + Prisma Schema
-✅ Swagger API Docs
-✅ Docker-friendly structure
-✅ CORS + Deployment Configured for Vercel & Render
-✅ Modular, Service-Oriented Backend
+- ✅ JWT Authentication
+- ✅ Product CRUD (Admin)
+- ✅ Order Placement & Revenue Analytics
+- ✅ Cart Management (Mobile)
+- ✅ PostgreSQL + Prisma Schema
+- ✅ Swagger API Docs
+- ✅ Docker-friendly structure
+- ✅ CORS + Deployment Configured for Vercel & Render
+- ✅ Modular, Service-Oriented Backend
 
 ## 👨‍💻 Author
 

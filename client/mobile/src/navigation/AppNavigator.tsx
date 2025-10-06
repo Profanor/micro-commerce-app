@@ -30,15 +30,15 @@ function AppStack() {
         component={ProductDetailScreen}
         options={{ title: "Product Details", headerRight: () => <CartIcon /> }}
       />
+      <Stack.Screen
+        name="Cart"
+        component={CartScreen}
+        options={{ title: "Your Cart" }}
+      />
 
       {/* protected screens — only available when logged in */}
       {user && (
         <>
-          <Stack.Screen
-            name="Cart"
-            component={CartScreen}
-            options={{ title: "Your Cart" }}
-          />
           <Stack.Screen
             name="Orders"
             component={OrdersScreen}

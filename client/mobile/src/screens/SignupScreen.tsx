@@ -6,24 +6,30 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { AuthContext } from "../context/AuthContext";
+import axiosClient from "../api/axiosClient";
 
-export default function LoginScreen({ navigation }: any) {
+export default function SignupScreen({ navigation }: any) {
   const { login } = useContext(AuthContext);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  const handleLogin = async () => {
-    setError("");
+  const handleSignup = async () => {
     setLoading(true);
     try {
+      await axiosClient.post("/auth/register", { email, password });
+
+      // auto-login after signup
       await login(email, password);
+
+      Alert.alert("Success", "Account created successfully!");
+      navigation.replace("Home");
     } catch (err: any) {
-      setError(err.message || "Login failed");
+      console.error("Signup error", err.response?.data || err.message);
+      Alert.alert("Error", "Signup failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -31,19 +37,16 @@ export default function LoginScreen({ navigation }: any) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome Back</Text>
-
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      <Text style={styles.title}>Create Account</Text>
 
       <TextInput
         style={styles.input}
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
-        keyboardType="email-address"
         autoCapitalize="none"
+        keyboardType="email-address"
       />
-
       <TextInput
         style={styles.input}
         placeholder="Password"
@@ -54,23 +57,24 @@ export default function LoginScreen({ navigation }: any) {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={handleLogin}
+        onPress={handleSignup}
         disabled={loading}
       >
         {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.buttonText}>Login</Text>
+          <Text style={styles.buttonText}>Sign Up</Text>
         )}
       </TouchableOpacity>
 
-      {/* sign-up link */}
-      <View style={styles.signupContainer}>
-        <Text>Don't have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
-          <Text style={styles.signupText}>Sign Up</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Login")}
+        style={{ marginTop: 16 }}
+      >
+        <Text style={{ color: "#007AFF", textAlign: "center" }}>
+          Already have an account? Login
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -97,14 +101,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
-  error: { color: "red", marginBottom: 12, textAlign: "center" },
-  signupContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 16,
-  },
-  signupText: {
-    color: "#007AFF",
-    fontWeight: "bold",
-  },
 });

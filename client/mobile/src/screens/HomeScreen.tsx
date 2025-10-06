@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   Text,
   FlatList,
@@ -7,14 +7,16 @@ import {
   Image,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import axiosClient from "../api/axiosClient";
+import { AuthContext } from "../context/AuthContext";
 
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 type RootStackParamList = {
   Home: undefined;
   ProductDetail: { product: any };
+  Login: undefined;
 };
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
@@ -27,6 +29,7 @@ interface HomeScreenProps {
 }
 
 export default function HomeScreen({ navigation }: HomeScreenProps) {
+  const { user, logout } = useContext(AuthContext);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -40,6 +43,14 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
     };
     fetchProducts();
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
 
   interface Product {
     id: number;
@@ -78,7 +89,17 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
-      <Text style={styles.header}>Available Products</Text>
+      <View style={styles.headerContainer}>
+        <Text style={styles.header}>Welcome, {user?.email || "Guest"}!</Text>
+        {user && (
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Text style={styles.logoutText}>Logout</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+
+      <Text style={styles.subHeader}>Available Products</Text>
+
       <FlatList
         data={products}
         keyExtractor={(item) => item.id.toString()}
@@ -95,7 +116,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#ECEFF1",
     padding: 16,
   },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 8,
+  },
   header: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "#222",
+  },
+  logoutButton: {
+    backgroundColor: "#cc0000",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+  },
+  logoutText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  subHeader: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 16,
@@ -142,6 +184,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontSize: 14,
     fontWeight: "500",
-    color: "#2196F3", // blue for stock info
+    color: "#2196F3",
   },
 });

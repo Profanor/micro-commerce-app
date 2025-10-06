@@ -1,4 +1,4 @@
-# 🛍️ Micro-Commerce App
+# 🛍️ Sync Commerce
 
 A full-stack micro-commerce system built with **NestJS**, **PostgreSQL**, **React (Vite)**, and **React Native (Expo)**.  
 The project includes:
@@ -196,6 +196,8 @@ pnpm run test:e2e
 - ✅ CORS + Deployment Configured for Vercel & Render
 - ✅ Modular, Service-Oriented Backend
 
+
+----
 
 ⚠️  **Note on Deployment (Render Idle Spin-Up Time)**
 

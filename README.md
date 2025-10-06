@@ -155,8 +155,11 @@ Swagger docs available at:
 🔗 https://micro-commerce-app.onrender.com/api/docs
 
 
+----
+
 **Testing**
-🧰 End-to-End (E2E) Tests
+
+### End-to-End (E2E) Tests
 
 - All backend tests are written using Jest and Supertest, covering authentication, product CRUD, and key validation flows.
 - These tests ensure that the API endpoints, database interactions, and middleware (like guards and validation pipes) work together as expected.
@@ -192,6 +195,14 @@ pnpm run test:e2e
 - ✅ Docker-friendly structure
 - ✅ CORS + Deployment Configured for Vercel & Render
 - ✅ Modular, Service-Oriented Backend
+
+
+⚠️  **Note on Deployment (Render Idle Spin-Up Time)**
+
+- The backend is deployed on Render (free tier), which enters an idle state after periods of inactivity.
+- When you first access the live API or frontend, the server may take up to 50 seconds to spin back up.
+- Once active, subsequent requests will respond instantly.
+
 
 ## 👨‍💻 Author
 

@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { AuthContext } from "../context/AuthContext";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function LoginScreen({ navigation }: any) {
   const { login } = useContext(AuthContext);
@@ -16,6 +17,7 @@ export default function LoginScreen({ navigation }: any) {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
     setError("");
@@ -35,23 +37,40 @@ export default function LoginScreen({ navigation }: any) {
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
+      {/* Email Field */}
+      <Text style={styles.label}>Email</Text>
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder="Enter your email"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
       />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+      {/* Password Field with Eye Icon */}
+      <Text style={styles.label}>Password</Text>
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={[styles.input, { flex: 1, marginBottom: 0 }]}
+          placeholder="Enter your password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!showPassword}
+        />
+        <TouchableOpacity
+          onPress={() => setShowPassword((prev) => !prev)}
+          style={styles.eyeIcon}
+        >
+          <Ionicons
+            name={showPassword ? "eye-off" : "eye"}
+            size={22}
+            color="#666"
+          />
+        </TouchableOpacity>
+      </View>
 
+      {/* Login Button */}
       <TouchableOpacity
         style={styles.button}
         onPress={handleLogin}
@@ -64,7 +83,7 @@ export default function LoginScreen({ navigation }: any) {
         )}
       </TouchableOpacity>
 
-      {/* sign-up link */}
+      {/* Sign-up link */}
       <View style={styles.signupContainer}>
         <Text>Don't have an account? </Text>
         <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
@@ -83,12 +102,31 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     textAlign: "center",
   },
+  label: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 6,
+  },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 8,
     padding: 12,
+    fontSize: 16,
     marginBottom: 16,
+  },
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    marginBottom: 16,
+    paddingRight: 8,
+  },
+  eyeIcon: {
+    padding: 8,
   },
   button: {
     backgroundColor: "#4CAF50",

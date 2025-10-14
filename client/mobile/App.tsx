@@ -6,12 +6,12 @@ import { CartProvider } from "./src/context/CartContext";
 
 export default function App() {
   return (
-    <AuthProvider>
-      <CartProvider>
+    <CartProvider>
+      <AuthProvider>
         <SafeAreaProvider>
           <AppNavigator />
         </SafeAreaProvider>
-      </CartProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </CartProvider>
   );
 }

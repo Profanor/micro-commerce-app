@@ -1,7 +1,14 @@
-import React, { createContext, useState, useEffect, ReactNode } from "react";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useContext,
+} from "react";
 import * as SecureStore from "expo-secure-store";
 import axiosClient from "../api/axiosClient";
 import { ActivityIndicator, View } from "react-native";
+import { CartContext } from "./CartContext";
 
 interface User {
   email: string;
@@ -25,6 +32,7 @@ export const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const { clearCart } = useContext(CartContext);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -71,6 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = async () => {
     await SecureStore.deleteItemAsync("token");
     setUser(null);
+    clearCart(); // clear cart on logout
   };
 
   // wait until auth is initialized before rendering app

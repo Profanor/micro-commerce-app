@@ -9,6 +9,9 @@ import {
   Body,
   ParseIntPipe,
   UseGuards,
+  BadRequestException,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -19,11 +22,15 @@ import { JwtAuthGuard } from '../auth/jwt.guard';
 import { UserRole } from '@prisma/client';
 import {
   ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { PrismaService } from '@micro-lib/database/prisma.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Multer } from 'multer';
 
 @ApiTags('products')
 @ApiBearerAuth()
@@ -79,6 +86,35 @@ export class ProductsController {
   @Post()
   create(@Body() dto: CreateProductDto) {
     return this.productsService.create(dto);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @Post('bulk-upload')
+  @ApiOperation({ summary: 'Bulk upload products via CSV file' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'CSV file containing product details',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Products uploaded successfully',
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  async bulkUpload(@UploadedFile() file: Multer.File) {
+    if (!file) {
+      throw new BadRequestException('CSV file is required');
+    }
+    return this.productsService.bulkUpload(file);
   }
 
   @ApiOperation({ summary: 'Update product (admin only)' })

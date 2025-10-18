@@ -12,13 +12,14 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import axiosClient from "../api/axiosClient";
 import { AuthContext } from "../context/AuthContext";
-
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import FooterNav from "../components/FooterNav";
 
 type RootStackParamList = {
   Home: undefined;
   ProductDetail: { product: any };
   Login: undefined;
+  SellerApplication: undefined;
 };
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
@@ -112,11 +113,11 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
         </Text>
         <View style={styles.priceRow}>
           <Text style={styles.price}>${item.price.toFixed(2)}</Text>
-          <View style={styles.stockBadge}>
-            <Text style={styles.stockText}>
+          {/* <View style={styles.stockBadge}> */}
+          {/* <Text style={styles.stockText}>
               {item.inventory > 0 ? `${item.inventory} left` : "Out of stock"}
-            </Text>
-          </View>
+            </Text> */}
+          {/* </View> */}
         </View>
       </View>
     </TouchableOpacity>
@@ -124,89 +125,104 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 24 }}
-      >
-        {/* header section */}
-        <View style={styles.headerSection}>
-          <View style={styles.headerTop}>
-            <View>
-              <Text style={styles.greeting}>Hello!</Text>
-              <Text style={styles.userName}>{user?.email || "Guest"}</Text>
-            </View>
-            {user && (
-              <TouchableOpacity
-                style={styles.logoutButton}
-                onPress={handleLogout}
-              >
-                <Text style={styles.logoutText}>Logout</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-
-          <View style={styles.searchContainer}>
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search products..."
-              placeholderTextColor="#999"
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-            />
-            <View style={styles.searchIcon}>
-              <Text style={styles.searchIconText}>🔍</Text>
-            </View>
-          </View>
-        </View>
-
-        {/* category chips */}
+      <View style={{ flex: 1 }}>
         <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.categoriesContainer}
-          contentContainerStyle={styles.categoriesContent}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 100 }}
         >
-          {["All", "Electronics", "Fashion", "Home", "Sports", "Books"].map(
-            (category) => (
-              <TouchableOpacity
-                key={category}
-                style={[
-                  styles.categoryChip,
-                  selectedCategory === category && styles.categoryChipActive,
-                ]}
-                onPress={() => handleCategoryPress(category)}
-              >
-                <Text
-                  style={[
-                    styles.categoryText,
-                    selectedCategory === category && styles.categoryTextActive,
-                  ]}
+          {/* header section */}
+          <View style={styles.headerSection}>
+            <View style={styles.headerTop}>
+              <View>
+                <Text style={styles.greeting}>Hello!</Text>
+                <Text style={styles.userName}>{user?.email || "Guest"}</Text>
+              </View>
+              {user && (
+                <TouchableOpacity
+                  style={styles.logoutButton}
+                  onPress={handleLogout}
                 >
-                  {category}
-                </Text>
-              </TouchableOpacity>
-            )
-          )}
+                  <Text style={styles.logoutText}>Logout</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
+            <View style={styles.searchContainer}>
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search products..."
+                placeholderTextColor="#999"
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+              />
+              <View style={styles.searchIcon}>
+                <Text style={styles.searchIconText}>🔍</Text>
+              </View>
+            </View>
+          </View>
+
+          {/* category chips */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.categoriesContainer}
+            contentContainerStyle={styles.categoriesContent}
+          >
+            {["All", "Electronics", "Fashion", "Home", "Sports", "Books"].map(
+              (category) => (
+                <TouchableOpacity
+                  key={category}
+                  style={[
+                    styles.categoryChip,
+                    selectedCategory === category && styles.categoryChipActive,
+                  ]}
+                  onPress={() => handleCategoryPress(category)}
+                >
+                  <Text
+                    style={[
+                      styles.categoryText,
+                      selectedCategory === category &&
+                        styles.categoryTextActive,
+                    ]}
+                  >
+                    {category}
+                  </Text>
+                </TouchableOpacity>
+              )
+            )}
+          </ScrollView>
+
+          {/* featured Products Section */}
+          <View style={styles.featuredSection}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Featured Products</Text>
+              <Text style={styles.sectionSubtitle}>
+                {filteredProducts.length} items
+              </Text>
+            </View>
+
+            <FlatList
+              data={filteredProducts}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={renderItem}
+              contentContainerStyle={styles.listContent}
+              scrollEnabled={false} // prevents nested scroll conflicts
+            />
+          </View>
         </ScrollView>
 
-        {/* featured Products Section */}
-        <View style={styles.featuredSection}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Featured Products</Text>
-            <Text style={styles.sectionSubtitle}>
-              {filteredProducts.length} items
-            </Text>
-          </View>
-
-          <FlatList
-            data={filteredProducts}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderItem}
-            contentContainerStyle={styles.listContent}
-            scrollEnabled={false} // prevents nested scroll conflicts
-          />
+        {/* call to action section */}
+        <View style={styles.floatingCTA}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("SellerApplication")}
+          >
+            <Text style={styles.floatingCTAText}>Want to Sell on inSync?</Text>
+          </TouchableOpacity>
         </View>
-      </ScrollView>
+
+        {/* footerNav */}
+        <FooterNav />
+      </View>
     </SafeAreaView>
   );
 }
@@ -411,5 +427,23 @@ const styles = StyleSheet.create({
   featuredSection: {
     marginTop: 24,
     paddingHorizontal: 16,
+  },
+  floatingCTA: {
+    position: "absolute",
+    bottom: 100, // just above footer nav
+    alignSelf: "center",
+    backgroundColor: "#FF6B35",
+    borderRadius: 30,
+    paddingVertical: 10,
+    paddingHorizontal: 24,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  floatingCTAText: {
+    color: "#FFF",
+    fontWeight: "bold",
+    fontSize: 15,
   },
 });

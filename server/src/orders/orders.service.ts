@@ -27,7 +27,7 @@ export class OrdersService {
             `Product ${product.title} is out of stock`,
           );
         }
-        total += product.price * item.quantity;
+        total += product.price * item.quantity; // calculate total
       }
 
       // deduct stock
@@ -52,7 +52,7 @@ export class OrdersService {
                 return {
                   productId: item.productId,
                   quantity: item.quantity,
-                  price: product!.price,
+                  price: product!.price, // capture price at order time
                 };
               }),
             ),

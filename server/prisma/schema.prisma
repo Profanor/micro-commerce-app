@@ -34,10 +34,12 @@ model Order {
   id        Int         @id @default(autoincrement())
   userId    Int
   total     Float
+  status    OrderStatus @default(PENDING)
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   items     OrderItem[]
   user      User        @relation(fields: [userId], references: [id])
+  payment   Payment?
 }
 
 model OrderItem {
@@ -48,6 +50,53 @@ model OrderItem {
   price     Float
   product   Product @relation(fields: [productId], references: [id])
   order     Order   @relation(fields: [orderId], references: [id])
+}
+
+model Seller {
+  id           Int          @id @default(autoincrement())
+  fullName     String
+  email        String       @unique
+  phone        String
+  businessName String
+  category     String?
+  description  String?
+  idCard       String?
+  status       SellerStatus @default(PENDING)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Payment {
+  id        Int           @id @default(autoincrement())
+  orderId   Int
+  amount    Float
+  method    String
+  status    PaymentStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  order     Order         @relation(fields: [orderId], references: [id])
+
+  @@unique([orderId])
+}
+
+enum SellerStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+  SHIPPED
+  COMPLETED
 }
 
 enum UserRole {
